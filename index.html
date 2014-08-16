@@ -63,5 +63,37 @@ outline: none;
 <textarea class="chatTextarea" placeholder="Type Your Message"></textarea>
 <div class="chatStatus">Status: <span>Idle</span></div>
 <script src="http:/localhost:8080/socket.io/socket.io.js"></script>
+<script>
+(function(){
+	var getNode = function(s){
+	return document.querySelector(s);
+	},
+	textarea = getNode('.chatTextarea'),
+	chatName = getNode('.chatName');
+	
+	try
+	{
+	var socket = io.connect("http://localhost:8080");
+	} catch(e)
+	{
+	}
+	
+	if(socket!==undefined)
+	{
+	socket.on('output',function(data){console.log(data)});
+	textarea.addEventListener('keydown',function(event){
+	var self = this,
+	name = chatName.value;
+	if(event.which===13 && event.shiftKey===false)
+	{
+	socket.emit('input',{name:name,message:self.value});
+	event.preventDefault();
+	textarea.value = null;
+	}
+	});
+	
+	}
+})();
+</script>
 </body>
 </html>
