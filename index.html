@@ -70,6 +70,7 @@ outline: none;
 	},
 	textarea = getNode('.chatTextarea'),
 	chatName = getNode('.chatName');
+	messages = getNode('.chatMessages');
 	
 	try
 	{
@@ -80,7 +81,20 @@ outline: none;
 	
 	if(socket!==undefined)
 	{
-	socket.on('output',function(data){console.log(data)});
+	socket.on('output',function(data)
+	{
+		if(data.length>0)
+		{
+			for(var x=0; x<data.length;x++)
+			{
+			var message = document.createElement('div');
+			message.setAttribute('class','.chatMessage');
+			message.textContent= data[x].name+ " : " + data[x].message;
+			messages.appendChild(message);
+			messages.insertBefore(message,message.firstChild);
+			}
+		}
+	});
 	textarea.addEventListener('keydown',function(event){
 	var self = this,
 	name = chatName.value;
